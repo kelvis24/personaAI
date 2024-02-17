@@ -1,0 +1,35 @@
+{
+  "short_name": "Prop Ease",
+  "name": "Prop Ease",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo1.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "asset-mngt.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }, 
+    {
+      "src": "images/financial-analysis.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },   
+    {
+      "src": "images/track-expenses.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
