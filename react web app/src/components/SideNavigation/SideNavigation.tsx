@@ -6,12 +6,9 @@ import {
   CalendarOutlined,
   HomeOutlined,
   LeftOutlined,
-  MoneyCollectOutlined,
-  PlusOutlined,
-  MinusOutlined,
-  ApartmentOutlined,
-  BuildOutlined,
-  AuditOutlined,
+  DatabaseOutlined, // Changed for a more direct representation of "Database"
+  PlusCircleOutlined, // More visually engaging than PlusOutlined for adding new items
+  MinusCircleOutlined, // More visually engaging than MinusOutlined for removing items
 } from "@ant-design/icons";
 
 const SideNavigation = () => {
@@ -20,7 +17,7 @@ const SideNavigation = () => {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const [isMenuCollapsed, setIsMenuCollpased] = React.useState(false);
+  const [isMenuCollapsed, setIsMenuCollapsed] = React.useState(false);
 
   return (
     <Sider
@@ -31,7 +28,7 @@ const SideNavigation = () => {
         padding: 0,
         marginLeft: 0,
       }}
-      collapsible={true}
+      collapsible
       collapsed={isMenuCollapsed}
       reverseArrow={false}
       trigger={null}
@@ -44,38 +41,21 @@ const SideNavigation = () => {
       >
         <Menu.Item
           icon={isMenuCollapsed ? <RightOutlined /> : <LeftOutlined />}
-          onClick={() => {
-            setIsMenuCollpased(!isMenuCollapsed);
-          }}
+          onClick={() => setIsMenuCollapsed(!isMenuCollapsed)}
         >
           {isMenuCollapsed ? "Show" : "Hide"}
         </Menu.Item>
         <Menu.Item icon={<HomeOutlined />}>
-          <Link to="/">Home</Link>
+          <Link to="/home">Home</Link>
         </Menu.Item>
-        <Menu.SubMenu key="finance" icon={<AuditOutlined />} title="Finance">
-          <Menu.Item key="finance-overview" icon={<MoneyCollectOutlined />}>
-            <Link to="/finance">Overview</Link>
+        <Menu.SubMenu key="database" icon={<DatabaseOutlined />} title="Database">
+          <Menu.Item key="view-database" icon={<PlusCircleOutlined />}>
+            <Link to="/view-database">View Database</Link>
           </Menu.Item>
-          <Menu.Item key="add-income" icon={<PlusOutlined />}>
-            <Link to="/add-income">Add Income</Link>
-          </Menu.Item>
-          <Menu.Item key="add-expense" icon={<MinusOutlined />}>
-            <Link to="/add-expense">Add Expense</Link>
+          <Menu.Item key="add-to-database" icon={<MinusCircleOutlined />}>
+            <Link to="/add-to-database">Add to Database</Link>
           </Menu.Item>
         </Menu.SubMenu>
-        <Menu.Item icon={<ApartmentOutlined />}>
-          <Link to="/property">Property</Link>
-        </Menu.Item>
-        <Menu.Item icon={<HomeOutlined />}>
-          <Link to="/building">Building</Link>
-        </Menu.Item>
-        <Menu.Item icon={<BuildOutlined />}>
-          <Link to="/unit">Unit</Link>
-        </Menu.Item>
-        <Menu.Item icon={<CalendarOutlined />}>
-          <Link to="/service-request">Service Request</Link>
-        </Menu.Item>
       </Menu>
     </Sider>
   );
