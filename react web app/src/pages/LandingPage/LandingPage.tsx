@@ -1,50 +1,48 @@
-import { Button } from "antd";
+import React from 'react';
+import { Button } from 'antd';
+// import './LandingPage.css'; // Ensure this file reflects the futuristic theme
 
 const LandingPage = () => {
-  const baseUrl = "https://main.d1c93c02ir9dp3.amplifyapp.com/";
 
   return (
     <div className="landing-page">
       <div className="landing-page-content">
-        <h1 className="landing-page-title">Real Estate Management</h1>
+        <h1 className="landing-page-title">Persona AI: Your Future Self</h1>
         <p className="landing-page-subtitle">
-          Track, analyze, and manage your real estate assets with ease.
+          Step into the future of personalized AI interaction. Craft an AI persona that mirrors your essence, understanding you like no other.
         </p>
         <div className="landing-page-features">
           <div className="landing-page-feature">
             <img
-              src={baseUrl + "asset-mngt.png"}
-              alt="Feature 1"
+              src={"https://www.kommunicate.io/blog/wp-content/uploads/2023/07/Personalization-at-Scale-How-Chatbots-Drive-Customized-Customer-Experiences-1.png"}
+              alt="Data Collection"
               className="landing-page-feature-image"
             />
-            <h3>Asset Tracking</h3>
+            <h3>Data Collection</h3>
             <p>
-              Effortlessly track and manage your real estate assets in one
-              central location.
+              Utilize our cutting-edge iOS app to securely gather personalized speech and text data.
             </p>
           </div>
           <div className="landing-page-feature">
             <img
-              src={baseUrl + "images/financial-analysis.png"}
-              alt="Feature 2"
+              src={"https://images.prismic.io/chatling-integrations/65832448531ac2845a26d3d5_PersonalizedAIChatbotGuide.jpeg?auto=format,compress"}
+              alt="Model Training"
               className="landing-page-feature-image"
             />
-            <h3>Financial Analysis</h3>
+            <h3>Model Training</h3>
             <p>
-              Analyze the financial performance of your assets with detailed
-              reports and insights.
+              Harness the power of advanced transfer learning to tailor AI models to your unique communication style.
             </p>
           </div>
           <div className="landing-page-feature">
             <img
-              src={baseUrl + "images/track-expenses.png"}
-              alt="Feature 3"
+              src={"https://www.eweek.com/wp-content/uploads/2023/08/ew08292023-conversational-ai-platforms.png"}
+              alt="Interactive Engagement"
               className="landing-page-feature-image"
             />
-            <h3>Expense Management</h3>
+            <h3>Interactive Engagement</h3>
             <p>
-              Keep track of your expenses, streamline processes, and optimize
-              your real estate operations.
+              Dive into interactive sessions with your AI persona, enriched with personalized prompts for a unique experience.
             </p>
           </div>
         </div>
@@ -54,7 +52,7 @@ const LandingPage = () => {
           size="large"
           className="landing-page-button"
         >
-          Get Started
+          Begin Crafting Your AI Persona
         </Button>
       </div>
     </div>
