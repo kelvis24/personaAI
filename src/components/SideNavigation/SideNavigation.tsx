@@ -3,7 +3,6 @@ import { Layout, Menu, theme } from "antd";
 import { Link } from "react-router-dom";
 import {
   RightOutlined,
-  CalendarOutlined,
   HomeOutlined,
   LeftOutlined,
   DatabaseOutlined, // Changed for a more direct representation of "Database"
