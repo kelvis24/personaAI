@@ -53,7 +53,9 @@ const checkUsernameUniqueness = async (username: string) => {
         await addDoc(collection(db, "users"), {
           uid: user.uid,
           email: user.email,
-          username: username
+          username: username,
+          firstName: values.firstName,
+          lastName: values.lastName
         });
         // Handle post-sign-up logic (e.g., redirecting the user)
       } else {
