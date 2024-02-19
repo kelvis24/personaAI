@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { db } from '~/lib/firebase';
+import { auth, db } from '~/lib/firebase'; // Adjust the import path as necessary
 import { collection, query, where, orderBy, getDocs, Timestamp } from 'firebase/firestore';
 import { format } from 'date-fns';
 
@@ -20,25 +20,39 @@ const ViewDatabasePage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      const username = 'usernamePlaceholder'; // Placeholder, replace as needed
-      const messagesRef = collection(db, 'conversations');
-      const q = query(messagesRef, where('username', '==', username), orderBy('timestamp', 'desc'));
+    const fetchUsernameAndMessages = async () => {
+      try {
+        const userEmail = auth.currentUser?.email;
+        if (!userEmail) throw new Error('User not logged in');
 
-      const querySnapshot = await getDocs(q);
-      const fetchedMessages: Message[] = querySnapshot.docs.map((doc) => {
-        const data = doc.data() as FirestoreMessage;
-        return {
-          sender: data.username === username ? 'You' : data.username, // Assuming the bot has a username
-          content: data.text,
-          timestamp: data.timestamp?.toDate() || new Date(),
-        };
-      });
+        const usersRef = collection(db, "users");
+        const qUser = query(usersRef, where("email", "==", userEmail));
+        const userSnapshot = await getDocs(qUser);
+        if (userSnapshot.empty) throw new Error('User profile not found');
 
-      setMessages(fetchedMessages);
+        const userData = userSnapshot.docs[0].data();
+        const username = userData.username as string;
+
+        const messagesRef = collection(db, 'conversations');
+        const qMessages = query(messagesRef, where('username', '==', username), orderBy('timestamp', 'desc'));
+
+        const messagesSnapshot = await getDocs(qMessages);
+        const fetchedMessages: Message[] = messagesSnapshot.docs.map((doc) => {
+          const data = doc.data() as FirestoreMessage;
+          return {
+            sender: data.username === username ? 'You' : data.username,
+            content: data.text,
+            timestamp: data.timestamp?.toDate() || new Date(),
+          };
+        });
+
+        setMessages(fetchedMessages);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
     };
 
-    fetchMessages().catch(console.error);
+    fetchUsernameAndMessages();
   }, []);
 
   return (
