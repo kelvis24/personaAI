@@ -17,6 +17,9 @@ import {
 import {
   LandingPage,
   SignUpPage,
+  HomePage,
+  AddDatabasePage,
+  ViewDatabasePage,
 } from "./pages";
 import { auth } from "./lib/firebase"; // Import your Firebase auth instance
 
@@ -97,7 +100,7 @@ const App: React.FC = () => {
             PageContent={
               <div style={pageStyling}>
                 {user ? (
-                  <p>home</p>
+                  <HomePage />
                 ) : (
                   <Navigate to="/" replace={true} />
                 )}
@@ -106,6 +109,51 @@ const App: React.FC = () => {
           />
         }
       />
+
+      <Route
+        path="/add-to-database"
+        // loader={HomePageLoader}
+        // action={HomePageAction}
+        element={
+          <AppLayout
+            TopNavigation={<TopNavigation />}
+            SideNavigation={<SideNavigation />}
+            SideAction={<SideActions />}
+            PageContent={
+              <div style={pageStyling}>
+                {user ? (
+                  <AddDatabasePage />
+                ) : (
+                  <Navigate to="/" replace={true} />
+                )}
+              </div>
+            }
+          />
+        }
+      />
+
+            <Route
+        path="/view-database"
+        // loader={HomePageLoader}
+        // action={HomePageAction}
+        element={
+          <AppLayout
+            TopNavigation={<TopNavigation />}
+            SideNavigation={<SideNavigation />}
+            SideAction={<SideActions />}
+            PageContent={
+              <div style={pageStyling}>
+                {user ? (
+                  <ViewDatabasePage />
+                ) : (
+                  <Navigate to="/" replace={true} />
+                )}
+              </div>
+            }
+          />
+        }
+      />
+
 
     </Route>
   );
