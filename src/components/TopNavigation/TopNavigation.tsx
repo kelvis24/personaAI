@@ -161,12 +161,7 @@ const TopNavigation: React.FC = () => {
       <div
         style={{ display: "flex", alignItems: "center", paddingRight: "1rem" }}
       >
-        <Button
-          type="primary"
-          icon={<InboxOutlined />}
-          style={{ marginRight: "0.5rem" }}
-          onClick={() => navigate("/messages")}
-        />
+    
         <Popover placement="bottomRight" content={userContent} trigger="click">
           <Button
             type="primary"
