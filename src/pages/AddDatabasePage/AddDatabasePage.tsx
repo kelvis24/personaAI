@@ -1,15 +1,43 @@
-import React, { useState, CSSProperties } from 'react';
-import { db } from '~/lib/firebase'; // Adjust the import path as necessary
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import React, { useState, useEffect, CSSProperties } from 'react';
+import { db, auth } from '~/lib/firebase'; // Make sure this path matches your Firebase config file
+import { addDoc, collection, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
 
 type Message = {
   sender: 'user' | 'bot';
   content: string;
 };
 
+interface User {
+  username: string;
+  email: string;
+}
+
 const AddDatabasePage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState('');
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userEmail = auth.currentUser?.email;
+        if (userEmail) {
+          const usersRef = collection(db, "users");
+          const q = query(usersRef, where("email", "==", userEmail));
+          const querySnapshot = await getDocs(q);
+          if (!querySnapshot.empty) {
+            const userData = querySnapshot.docs[0].data() as User;
+            setUser(userData);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        setUser(null);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const sendMessage = async () => {
     if (userInput.trim() === '') return;
@@ -17,21 +45,23 @@ const AddDatabasePage: React.FC = () => {
     const newUserMessage: Message = { sender: 'user', content: userInput };
     setMessages((prevMessages) => [...prevMessages, newUserMessage]);
 
-    try {
-      const username = 'usernamePlaceholder'; // Implement actual username retrieval logic
+    if (user) {
+      try {
+        await addDoc(collection(db, 'conversations'), {
+          username: user.username, // Use the fetched username
+          text: userInput,
+          timestamp: serverTimestamp(),
+        });
 
-      await addDoc(collection(db, 'conversations'), {
-        username: username,
-        text: userInput,
-        timestamp: serverTimestamp(),
-      });
-
-      const successMessage: Message = { sender: 'bot', content: "Successfully noted." };
-      setMessages((prevMessages) => [...prevMessages, successMessage]);
-    } catch (error) {
-      console.error('Error adding message to Firestore:', error);
-      const failureMessage: Message = { sender: 'bot', content: "Failed." };
-      setMessages((prevMessages) => [...prevMessages, failureMessage]);
+        const successMessage: Message = { sender: 'bot', content: "Successfully noted." };
+        setMessages((prevMessages) => [...prevMessages, successMessage]);
+      } catch (error) {
+        console.error('Error adding message to Firestore:', error);
+        const failureMessage: Message = { sender: 'bot', content: "Failed." };
+        setMessages((prevMessages) => [...prevMessages, failureMessage]);
+      }
+    } else {
+      console.error("No user information available");
     }
 
     setUserInput('');
