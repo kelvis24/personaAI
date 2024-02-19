@@ -1,0 +1,38 @@
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+}
+
+.message-container {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 20px;
+}
+
+.message {
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.message.user {
+    background-color: #e3f2fd;
+    /* Light blue for user messages */
+    align-self: flex-end;
+}
+
+.message.bot {
+    background-color: #f0f0f0;
+    /* Light grey for bot messages */
+    align-self: flex-start;
+}
+
+.message-header {
+    margin-bottom: 5px;
+}
+
+.message-content {
+    text-align: left;
+}
