@@ -12,7 +12,6 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 
 import {
   UserOutlined,
-  InboxOutlined,
   QuestionCircleOutlined,
 } from "@ant-design/icons";
 
