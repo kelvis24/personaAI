@@ -3,6 +3,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from flask_cors import CORS
 import json
+from datetime import datetime
 
 class Firebase:
     def __init__(self, service_account_key_path):
@@ -53,8 +54,38 @@ class Firebase:
         except Exception as e:
             print(f"Error: {str(e)}")
             return None
-        
 
+
+
+    def create_user_data_file(self, collection_id, property_name, property_value):
+        try:
+            # Generate timestamp
+            timestamp = datetime.now()
+
+            # Construct filename
+            filename = f"{property_value}_{timestamp.strftime('%Y%m%d_%H%M%S')}.txt"
+
+            # Get user data based on property
+            user_data_list = self.query_by_property(collection_id, property_name, property_value)
+
+            if user_data_list:
+                # Extract 'text' field from each document
+                texts = [user_data.get('text', '') for user_data in user_data_list]
+
+                # Write consolidated user data to file
+                with open(filename, "w") as file:
+                    file.write('\n'.join(texts))
+
+                return filename
+            else:
+                print("No user data found for the given property.")
+                return None
+
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            return None
+
+        
 if __name__ == "__main__":
     firebase = Firebase("/Users/elviskimara/Downloads/new/personaAI/other/models being tested/Python Web App for testing (flaskapp)/src/personaai-d7d1a-firebase-adminsdk-4578u-a52d9e8d87.json")
     
@@ -78,6 +109,24 @@ if __name__ == "__main__":
     #Get all user data by username
     query_data = firebase.query_by_property("conversations", "username", "usernamePlaceholder")
     if query_data:
-        print("\n\n Query data for query_by_property:", query_data)
+        print("\n\n Query data for query_by_property:\n\n\n\n", query_data)
     else:
         print("No documents found matching the query or error occurred.")
+
+    # Test data
+    collection_id = "conversations"
+    property_name = "username"
+    property_value = "usernamePlaceholder"
+
+    # Test the function
+    filename = firebase.create_user_data_file(collection_id, property_name, property_value)
+    
+    if filename:
+        try:
+            with open(filename, "r") as file:
+                user_data = file.read()
+                print("Successfully read text data from the file:", user_data)
+        except FileNotFoundError:
+            print("Error: File not found.")
+        except Exception as e:
+            print("An error occurred while reading the file:", e)
