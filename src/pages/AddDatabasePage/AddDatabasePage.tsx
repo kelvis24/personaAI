@@ -10,12 +10,14 @@ type Message = {
 interface User {
   username: string;
   email: string;
+  vector: number[];
 }
 
 const AddDatabasePage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState('');
   const [user, setUser] = useState<User | null>(null);
+  const [vector, setVector] = useState<number[]>([]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -45,12 +47,33 @@ const AddDatabasePage: React.FC = () => {
     const newUserMessage: Message = { sender: 'user', content: userInput };
     setMessages((prevMessages) => [...prevMessages, newUserMessage]);
 
+
+        // Make a call to your API to get the vector representation
+    try {
+      const response = await fetch(`http://localhost:8080/api?input_string=${encodeURIComponent(userInput)}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      const vector = data.vector; // Assuming your API returns a JSON object with a 'vector' key
+      console.log('Vector from API:', vector);
+      setVector(vector);
+
+      // You can now use the `vector` for whatever next steps you need
+      // For example, you might want to send this vector to your database along with the user input
+
+    } catch (error) {
+      console.error('Error fetching vector from API:', error);
+      // Handle the error (maybe notify the user that something went wrong)
+    }
+
     if (user) {
       try {
         await addDoc(collection(db, 'conversations'), {
           username: user.username, // Use the fetched username
           text: userInput,
           timestamp: serverTimestamp(),
+          vector: vector, // Replace 'vector' with the actual vector you get from your API
         });
 
         const successMessage: Message = { sender: 'bot', content: "Successfully noted." };
