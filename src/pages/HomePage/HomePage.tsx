@@ -21,17 +21,30 @@ const HomePage: React.FC = () => {
   };
 
   const sendMessage = async () => {
-    if (userInput.trim() === '') return;
+  if (userInput.trim() === '') return;
 
-    const newUserMessage: Message = { sender: 'user', content: userInput };
-    setMessages((prevMessages) => [...prevMessages, newUserMessage]);
+  const newUserMessage: Message = { sender: 'user', content: userInput };
+  setMessages((prevMessages) => [...prevMessages, newUserMessage]);
+  try {
+      const response = await fetch(`http://localhost:8080/query?input_string=${encodeURIComponent(userInput)}`);
 
-    const botResponse = getRandomResponse();
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+
+    const botResponse = data.response; // Adjust based on how the response is structured
     const newBotMessage: Message = { sender: 'bot', content: botResponse };
     setMessages((prevMessages) => [...prevMessages, newBotMessage]);
+  } catch (error) {
+    console.error('Error fetching response:', error);
+    const errorMessage: Message = { sender: 'bot', content: 'Sorry, something went wrong.' };
+    setMessages((prevMessages) => [...prevMessages, errorMessage]);
+  }
 
-    setUserInput('');
-  };
+  setUserInput('');
+};
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
