@@ -1,50 +1,103 @@
-import React, { useState, CSSProperties } from 'react';
+import React, { useState, useEffect, CSSProperties } from 'react';
+import { db, auth } from '~/lib/firebase'; // Make sure this path matches your Firebase config file
+import { addDoc, collection, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
 
 type Message = {
   sender: 'user' | 'bot';
   content: string;
+  username: string;
 };
+interface User {
+  username: string;
+  email: string;
+}
 
 const HomePage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState('');
+  const [user, setUser] = useState<User | null>(null);
 
-  const getRandomResponse = (): string => {
-    const responses = [
-      "Interesting point!",
-      "Can you elaborate on that?",
-      "Why do you think that?",
-      "I never thought of it that way.",
-      "That's a great insight.",
-    ];
-    return responses[Math.floor(Math.random() * responses.length)];
-  };
+  useEffect(() => {
+      const fetchUser = async () => {
+        try {
+          const userEmail = auth.currentUser?.email;
+          if (userEmail) {
+            const usersRef = collection(db, "users");
+            const q = query(usersRef, where("email", "==", userEmail));
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+              const userData = querySnapshot.docs[0].data() as User;
+              setUser(userData);
+            }
+          }
+        } catch (error) {
+          console.error("Error fetching user:", error);
+          setUser(null);
+        }
+      };
 
-  const sendMessage = async () => {
+      fetchUser();
+    }, []);
+
+
+
+const sendMessage = async () => {
   if (userInput.trim() === '') return;
 
-  const newUserMessage: Message = { sender: 'user', content: userInput };
+  // Constructing the user message to add to the local state
+  const newUserMessage: Message = { 
+    sender: 'user', 
+    content: userInput, 
+    username: user?.username || 'anonymous' // Using 'anonymous' if username is not available
+  };
   setMessages((prevMessages) => [...prevMessages, newUserMessage]);
-  try {
-      const response = await fetch(`http://localhost:8080/query?input_string=${encodeURIComponent(userInput)}`);
+  
+try {
+    const url = `http://localhost:8080/query?input_string=${encodeURIComponent(userInput)}&username=${encodeURIComponent(user?.username || 'anonymous')}`;
+    const response = await fetch(url);
 
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
 
     const data = await response.json();
-
-    const botResponse = data.response; // Adjust based on how the response is structured
-    const newBotMessage: Message = { sender: 'bot', content: botResponse };
+    const botResponse = data.response; // Assuming the response structure includes a 'response' field
+    const newBotMessage: Message = { sender: 'bot', content: botResponse, username: 'bot' };
     setMessages((prevMessages) => [...prevMessages, newBotMessage]);
   } catch (error) {
     console.error('Error fetching response:', error);
-    const errorMessage: Message = { sender: 'bot', content: 'Sorry, something went wrong.' };
+    const errorMessage: Message = { sender: 'bot', content: 'Sorry, something went wrong.', username: 'bot' };
     setMessages((prevMessages) => [...prevMessages, errorMessage]);
   }
-
   setUserInput('');
 };
+
+
+//   const sendMessage = async () => {
+//   if (userInput.trim() === '') return;
+
+//   const newUserMessage: Message = { sender: 'user', content: userInput };
+//   setMessages((prevMessages) => [...prevMessages, newUserMessage]);
+//   try {
+//       const response = await fetch(`http://localhost:8080/query?input_string=${encodeURIComponent(userInput)}`);
+
+//     if (!response.ok) {
+//       throw new Error('Network response was not ok');
+//     }
+
+//     const data = await response.json();
+
+//     const botResponse = data.response; // Adjust based on how the response is structured
+//     const newBotMessage: Message = { sender: 'bot', content: botResponse };
+//     setMessages((prevMessages) => [...prevMessages, newBotMessage]);
+//   } catch (error) {
+//     console.error('Error fetching response:', error);
+//     const errorMessage: Message = { sender: 'bot', content: 'Sorry, something went wrong.' };
+//     setMessages((prevMessages) => [...prevMessages, errorMessage]);
+//   }
+
+//   setUserInput('');
+// };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
@@ -52,6 +105,7 @@ const HomePage: React.FC = () => {
     }
   };
 
+  
   return (
     <div style={styles.chatContainer}>
       <div style={styles.messageContainer}>

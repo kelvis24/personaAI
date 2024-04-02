@@ -42,13 +42,14 @@ def api():
 def query():
     # Get the input from the request
     userInput = request.args.get('input_string')
+    username = request.args.get('username')
     print(userInput)
     
     # Use the HuggingFaceEmbedding model to get the vector representation
     query_vector = embed_model.get_text_embedding(userInput)
     
     # Assuming firebase.query_vectors_by_user fetches vectors and texts
-    firebase_vectors_texts = firebase.query_vectors_by_user("conversations", "1641935133")
+    firebase_vectors_texts = firebase.query_vectors_by_user("conversations", username)
     
     print("Firebase vectors and texts: ", firebase_vectors_texts)
     
