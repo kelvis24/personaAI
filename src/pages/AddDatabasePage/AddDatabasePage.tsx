@@ -44,6 +44,8 @@ const AddDatabasePage: React.FC = () => {
   const sendMessage = async () => {
     if (userInput.trim() === '') return;
 
+    let vector = null;
+
     const newUserMessage: Message = { sender: 'user', content: userInput };
     setMessages((prevMessages) => [...prevMessages, newUserMessage]);
 
@@ -55,9 +57,9 @@ const AddDatabasePage: React.FC = () => {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      const vector = data.vector; // Assuming your API returns a JSON object with a 'vector' key
+      vector = data.vector; // Assuming your API returns a JSON object with a 'vector' key
       console.log('Vector from API:', vector);
-      setVector(vector);
+      // setVector(vector);
 
       // You can now use the `vector` for whatever next steps you need
       // For example, you might want to send this vector to your database along with the user input
