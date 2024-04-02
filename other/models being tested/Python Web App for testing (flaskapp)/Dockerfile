@@ -9,7 +9,8 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 
 COPY src/requirements.txt ./
-
+COPY src/firebase.py ./
+COPY src/personaai-d7d1a-firebase-adminsdk-4578u-a52d9e8d87.json ./
 # Set the module name
 ENV MODULE app
 ENV QT_X11_NO_MITSHM=1
@@ -21,14 +22,14 @@ ENV PORT 8080
 RUN pip install --upgrade pip
 
 # Install system dependencies required for psutil and OpenCV
-RUN apt-get update && \
-    apt-get install -y \
-    gcc \
-    python3-dev \
-    libgl1-mesa-glx \
-    libglib2.0-0 \
-    libjpeg-dev \
-    build-essential
+# RUN apt-get update && \
+#     apt-get install -y \
+#     gcc \
+#     python3-dev \
+#     libgl1-mesa-glx \
+#     libglib2.0-0 \
+#     libjpeg-dev \
+#     build-essential
 
 # Install production dependencies.
 RUN pip install --no-cache-dir -r requirements.txt
