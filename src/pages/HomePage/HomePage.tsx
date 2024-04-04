@@ -51,9 +51,9 @@ const sendMessage = async () => {
     username: user?.username || 'anonymous' // Using 'anonymous' if username is not available
   };
   setMessages((prevMessages) => [...prevMessages, newUserMessage]);
-  
+
 try {
-    const url = `http://localhost:8080/query?input_string=${encodeURIComponent(userInput)}&username=${encodeURIComponent(user?.username || 'anonymous')}`;
+    const url = `https://www.safetyscan.live/query?input_string=${encodeURIComponent(userInput)}&username=${encodeURIComponent(user?.username || 'anonymous')}`;
     const response = await fetch(url);
 
     if (!response.ok) {

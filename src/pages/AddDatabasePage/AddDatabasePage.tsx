@@ -52,7 +52,7 @@ const AddDatabasePage: React.FC = () => {
 
         // Make a call to your API to get the vector representation
     try {
-      const response = await fetch(`http://localhost:8080/api?input_string=${encodeURIComponent(userInput)}`);
+      const response = await fetch(`https://www.safetyscan.live/api?input_string=${encodeURIComponent(userInput)}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
