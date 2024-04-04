@@ -98,26 +98,28 @@ ANSWER:
       
     text_input = prompt_template.replace("{context}", context)\
             .replace("{question}", userInput)
-
-    # output = replicate.run(
-    #         "meta/llama-2-13b-chat",
-    #         input={
-    #             "debug": False,
-    #             "top_k": -1,
-    #             "top_p": 1,
-    #             "prompt": text_input,
-    #             "temperature": 0.05,
-    #             "system_prompt": "You are a helpful and truthful assistant, answer only if you know the answer. If you do not know the answer, truthfully say 'I do not know'.",
-    #             "max_new_tokens": 800,
-    #             "min_new_tokens": -1,
-    #             "repetition_penalty": 1
-    #         }
-    #     )
+            
+            
+            
+    output = replicate.run(
+            "meta/llama-2-13b-chat",
+            input={
+                "debug": False,
+                "top_k": -1,
+                "top_p": 1,
+                "prompt": text_input,
+                "temperature": 0.05,
+                "system_prompt": "You are a helpful and truthful assistant, answer only if you know the answer. If you do not know the answer, truthfully say 'I do not know'.",
+                "max_new_tokens": 800,
+                "min_new_tokens": -1,
+                "repetition_penalty": 1
+            }
+        )
 
     # print("".join(output))
     
     # Return the response
-    return jsonify({"response": "".join(context)})
+    return jsonify({"response": "".join(output)})
 
 
 if __name__ == '__main__':

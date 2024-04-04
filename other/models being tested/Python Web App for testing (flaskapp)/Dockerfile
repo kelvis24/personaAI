@@ -11,6 +11,8 @@ WORKDIR $APP_HOME
 COPY src/requirements.txt ./
 COPY src/firebase.py ./
 COPY src/personaai-d7d1a-firebase-adminsdk-4578u-a52d9e8d87.json ./
+COPY src/.env ./
+
 # Set the module name
 ENV MODULE app
 ENV QT_X11_NO_MITSHM=1
