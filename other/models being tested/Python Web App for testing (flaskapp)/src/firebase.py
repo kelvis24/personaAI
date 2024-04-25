@@ -10,11 +10,7 @@ class Firebase:
     def __init__(self, cred):
         self.app = Flask(__name__)
         CORS(self.app)
-        
-        # cred = credentials.Certificate(service_account_key_path)
         self.default_app = cred
-        
-        # firebase_admin.initialize_app(cred)
     
     def read_from_DB(self, collection_id, document_id):
         try:
@@ -58,34 +54,6 @@ class Firebase:
             print(f"Error: {str(e)}")
             return None
 
-
-    # def query_vectors_by_user(self, collection_id, username):
-    #     try:
-    #         # Get a Firestore client
-    #         db = firestore.client()
-
-    #         # Query Firestore based on user property
-    #         docs = db.collection(collection_id).where("username", "==", username).get()
-
-    #         # Extract and return list of dictionaries with vectors and texts from documents
-    #         vectors_texts = [
-    #             {
-    #                 "vector": doc.to_dict().get('vector', None),
-    #                 "text": doc.to_dict().get('text', '')
-    #             }
-    #             for doc in docs
-    #         ]
-
-    #         # Optionally, filter out documents where vector or text might be missing
-    #         vectors_texts = [vt for vt in vectors_texts if vt["vector"] is not None and vt["text"]]
-
-    #         return vectors_texts
-    #     except Exception as e:
-    #         print(f"Error: {str(e)}")
-    #         return None
-
-
-
     def query_vectors_by_user(self, collection_id, username):
         try:
             # Get a Firestore client
@@ -106,12 +74,10 @@ class Firebase:
 
             # Filter out documents where vector or text might be missing
             # vectors_texts = [vt for vt in vectors_texts if vt["vector"] is not None and vt["text"]]
-            
             # Filter out documents where vector is missing or empty, or text is missing
             vectors_texts = [vt for vt in vectors_texts if vt["vector"] and vt["text"]]
             
-            print("vectors_texts:", vectors_texts)
-
+            # print("vectors_texts:", vectors_texts)
 
             # Find the maximum vector length
             max_vector_length = max(len(vt["vector"]) for vt in vectors_texts)
@@ -119,14 +85,6 @@ class Firebase:
             print("max_vector_length:", max_vector_length)
 
             # Pad vectors to have the same length
-            # for vt in vectors_texts:
-            #     vector_length = len(vt["vector"])
-            #     if vector_length < max_vector_length:
-            #         # Pad with zeros to match the max_vector_length
-            #         vt["vector"] = vt["vector"] + [0] * (max_vector_length - vector_length)
-            
-                        # Pad vectors to have the same length
-# Pad vectors to have the same length
             for vt in vectors_texts:
                 # First, ensure that vt["vector"] is indeed a list
                 if isinstance(vt["vector"], list):
@@ -139,8 +97,6 @@ class Firebase:
                 else:
                     # This is a catch-all for debugging, in case vt["vector"] isn't a list as expected
                     print(f"Unexpected type for 'vector': {type(vt['vector'])}. Expected list.")
-
-
 
             return vectors_texts
         except Exception as e:
