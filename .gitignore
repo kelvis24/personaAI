@@ -4,3 +4,5 @@ react web app/.DS_Store
 firebase-debug.log
 .firebase/hosting.YnVpbGQ.cache
 /.firebase
+.DS_Store
+other/models being tested/.DS_Store
