@@ -106,7 +106,7 @@ def query():
                 .replace("{question}", userInput)
         
         output = replicate.run(
-            "meta/llama-2-13b-chat",
+            "meta/llama-2-70b-chat",
             input={
                 "debug": False,
                 "top_k": -1,
@@ -187,7 +187,7 @@ def query():
             
             
     output = replicate.run(
-            "meta/llama-2-13b-chat",
+            "meta/llama-2-70b-chat",
             input={
                 "debug": False,
                 "top_k": -1,
